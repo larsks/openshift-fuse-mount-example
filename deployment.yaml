@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fuse-example
+  annotations:
+    image.openshift.io/triggers: |
+      [
+        {
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "fuse-example:latest"
+          },
+          "fieldPath": "spec.template.spec.containers[?(@.name==\"fuse-example\")].image"
+        }
+      ]
+
+spec:
+  template:
+    metadata:
+      annotations:
+        io.kubernetes.cri-o.Devices: "/dev/fuse"
+    spec:
+      serviceAccountName: fuse-example
+      volumes:
+        - name: homedir
+          emptyDir: {}
+      containers:
+      - name: fuse-example
+        image: fuse-example:latest
+        volumeMounts:
+          - name: homedir
+            mountPath: /home/fedora
+        command:
+          - /bin/bash
+          - -c
+          - |
+            set -e
+            cd $HOME
+            tar -C /etc/profile.d -cf- . > archive.tar
+            mkdir mnt
+            archivemount archive.tar mnt
+            exec sleep inf
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        securityContext:
+          privileged: true

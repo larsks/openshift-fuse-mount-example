@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: fuse-example
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: fuse-example:latest
+  source:
+    type: Git
+    contextDir: /
+    git:
+      uri: https://github.com/larsks/openshift-fuse-mount-example.git
+      ref: main
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Containerfile
+    type: Docker
+  successfulBuildsHistoryLimit: 3
+  failedBuildsHistoryLimit: 3
+  triggers:
+  - type: ConfigChange
+  - type: GitHub
+    github:
+      secretReference:
+        name: "github-webhook-secret"
