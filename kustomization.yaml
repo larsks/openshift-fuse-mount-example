@@ -3,7 +3,8 @@ kind: Kustomization
 commonLabels:
     app: fuse-example
 resources:
-- build
 - sa.yaml
+- scc.yaml
+- cr.yaml
 - crb.yaml
 - deployment.yaml

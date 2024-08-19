@@ -1,11 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: fuse-example-anyuid
+  name: fuse-example-sysadmin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:openshift:scc:privileged
+  name: nerc-restricted-with-sys-admin
 subjects:
 - kind: ServiceAccount
   namespace: lars-sandbox

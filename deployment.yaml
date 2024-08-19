@@ -45,4 +45,5 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         securityContext:
-          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN"]
